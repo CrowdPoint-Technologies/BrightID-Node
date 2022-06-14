@@ -5,62 +5,39 @@ services:
     depends_on:
       - db
     network_mode: host
-    image: brightid/web_services
+    image: web_services
     env_file:
       - config.env
     expose:
       - 3000
 
-  scorer:
-    build: scorer
-    depends_on:
-      - ws
-      - db
-    network_mode: host
-    image: brightid/scorer
-    volumes:
-      - type: volume
-        source: snapshots
-        target: /snapshots
-    env_file:
-      - config.env
-    environment:
-      - INIT_BRIGHTID_DB
-
-  consensus_receiver:
+#  scorer:
+#    build: scorer
+#    depends_on:
+#      - ws
+#      - db
+#    network_mode: host
+#    image: brightid/scorer
+#    volumes:
+#      - type: volume
+#        source: snapshots
+#        target: /snapshots
+#    env_file:
+#      - config.env
+#    environment:
+#      - INIT_BRIGHTID_DB
+#
+  consensus:
     build: consensus
     depends_on:
       - ws
       - db
     network_mode: host
-    image: brightid/consensus
+    image: consensus
     volumes:
       - type: volume
         source: snapshots
         target: /snapshots
-    env_file:
-      - config.env
-    environment:
-      RUN_TYPE: "RECEIVER"
-
-  consensus_sender:
-    build: consensus
-    depends_on:
-      - ws
-      - db
-    network_mode: host
-    image: brightid/consensus
-    env_file:
-      - config.env
-    environment:
-      RUN_TYPE: "SENDER"
-
-  updater:
-    build: updater
-    depends_on:
-      - db
-    network_mode: host
-    image: brightid/updater
     env_file:
       - config.env
 
